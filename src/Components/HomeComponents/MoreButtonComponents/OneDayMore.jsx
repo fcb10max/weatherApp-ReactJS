@@ -18,9 +18,9 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
   `;
 const Wrapper = styled.div`
-  background-color: rgba(0, 0, 0, 0.8);
   max-width: 1280px;
   width: 100%;
   height: 100%;
@@ -28,14 +28,17 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-`;
+  `;
 const InfoContainer = styled.div`
-  max-height: ${(props) => props.heightValue + "px"};
-  width: 90vw;
-  height: 90vh;
+  overflow: hidden;
+  height: 90%;
+  width: 90%;
   background-color: white;
   border-radius: 20px;
   position: relative;
+`;
+const ContainerWrapper = styled.div`
+  height: 95%;
 `;
 const Icon = styled.button`
   background-color: transparent;
@@ -45,8 +48,8 @@ const Icon = styled.button`
   font-size: 40px;
   color: black;
   position: absolute;
-  right: 2vw;
-  top: 2vh;
+  right: 2%;
+  top: 2%;
   cursor: pointer;
 
   :hover {
@@ -58,7 +61,7 @@ const Content = styled.div`
   height: 85%;
   overflow: auto;
   margin: 30px;
-  margin-top: calc(3vw + 40px);
+  margin-top: 80px;
   `;
 const ContentWrapper = styled.div`
   padding-right: 20px;
@@ -66,10 +69,8 @@ const ContentWrapper = styled.div`
   flex-direction: column;
 `;
 
-const OneDayMore = ({ active, setActive, data }) => {
+const OneDayMore = ({ active, setActive, hours, current, astro }) => {
   const [posY, setPosY] = useState(window.pageYOffset);
-
-  console.log(window.pageYOffset);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -86,16 +87,18 @@ const OneDayMore = ({ active, setActive, data }) => {
     <Container active={active} posY={posY}>
       <Wrapper>
         <InfoContainer heightValue={window.innerHeight * 0.9}>
-          <Icon onClick={() => setActive(false)}>
-            <FontAwesomeIcon icon={faTimes} />
-          </Icon>
-          <Content>
-            <ContentWrapper>
-              <SunriseSunset />
-              <HourlyForecasts data={data.forecast.forecastday[0].hour} />
-              <AdditionalInfo data={data.current} />
-            </ContentWrapper>
-          </Content>
+          <ContainerWrapper>
+            <Icon onClick={() => setActive(false)}>
+              <FontAwesomeIcon icon={faTimes} />
+            </Icon>
+            <Content>
+              <ContentWrapper>
+                <SunriseSunset data={astro} day={hours[0]}/>
+                <HourlyForecasts data={hours} />
+                <AdditionalInfo data={current} />
+              </ContentWrapper>
+            </Content>
+          </ContainerWrapper>
         </InfoContainer>
       </Wrapper>
     </Container>

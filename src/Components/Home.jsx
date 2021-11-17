@@ -15,7 +15,7 @@ const Container = styled.div`
   overflow-x: hidden;
   text-align: center;
   position: relative;
-  overflow-y: ${(props)=>props.moreActive? 'hidden' : 'auto'};
+  overflow-y: ${(props) => (props.moreActive ? "hidden" : "auto")};
 `;
 const Wrapper = styled.div`
   display: flex;
@@ -27,14 +27,27 @@ const Wrapper = styled.div`
   font-weight: 100;
 `;
 
-const Main = ({setPos}) => {
-  const { data, setLoading, loading, searchResult, setSearch, search, err, errText, setRequestName } =
-    useDataFetch();
+const Main = ({ setPos }) => {
+  const {
+    data,
+    setLoading,
+    loading,
+    searchResult,
+    setSearch,
+    search,
+    err,
+    errText,
+    setRequestName,
+  } = useDataFetch();
   const [oneDayMoreActive, setOneDayMoreActive] = useState(false);
   if (err) console.log(errText);
 
-  if (oneDayMoreActive) setPos('fixed');
-  if (!oneDayMoreActive) setPos('static');
+  if (oneDayMoreActive) setPos("fixed");
+  if (!oneDayMoreActive) setPos("static");
+
+  const [hours, setHours] = useState("");
+  const [current, setCurrent] = useState("");
+  const [astro, setAstro] = useState("");
 
   return (
     <Container moreActive={oneDayMoreActive}>
@@ -43,15 +56,38 @@ const Main = ({setPos}) => {
         setSearch={setSearch}
         search={search}
         setRequestName={setRequestName}
-        setLoading = {setLoading}
+        setLoading={setLoading}
         currentLocation={data ? data.location.name : ""}
       />
       {!loading && data ? (
         <>
-        <BriefData data={data} />
-          {oneDayMoreActive && (<OneDayMore setActive={setOneDayMoreActive} active={OneDayMore} data={data}/>)}
-          <Button onClickEvent={setOneDayMoreActive} text='More'/>
-          <OtherDays data={data.forecast.forecastday}/>
+          <BriefData data={data} />
+          {oneDayMoreActive && (
+            <OneDayMore
+              setActive={setOneDayMoreActive}
+              active={oneDayMoreActive}
+              hours={hours}
+              current={current}
+              astro={astro} 
+            />
+          )}
+          <Button
+            onClickEvent={() => {
+              setOneDayMoreActive(true);
+              setCurrent(data.current);
+              setHours(data.forecast.forecastday[0].hour);
+              setAstro(data.forecast.forecastday[0].astro);
+            }}
+            text="More"
+          />
+          <OtherDays
+            data={data.forecast.forecastday}
+            current={data.current}
+            setOneDayMoreActive={setOneDayMoreActive}
+            setCurrent={setCurrent}
+            setHours={setHours}
+            setAstro={setAstro}
+          />
         </>
       ) : (
         <Wrapper>

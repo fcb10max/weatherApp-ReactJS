@@ -14,21 +14,20 @@ export const useDataFetch = () => {
     try {
       setErr(false);
       setLoading(true);
-      let searchCity = requestName || "London";
+      let searchCity = requestName ? requestName : "London";
       const data = await fetchingData.Current(searchCity);
       if (data.location.name === requestName) return;
       setData(data);
-      setRequestName('');
+      console.log(requestName);
     } catch (error) {
       setErr(true);
       setErrText(error);
-      console.log(errText);
     }
     setLoading(false);
   };
 
   const fetchSearchData = async (search) => {
-    if (search === "") return;
+    if (!search) return;
     try {
       setErr(false);
       let data = await fetchingData.Search(search);

@@ -6,6 +6,11 @@ const Container = styled.div`
 `;
 const Wrapper = styled.div`
   display: flex;
+
+  @media (max-width: 400px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 const Left = styled.div`
   flex: 1;
@@ -23,6 +28,7 @@ const Right = styled.div`
 const InfoBox = styled.div`
   font-size: 25px;
   width: 50%;
+  height: 30px;
 
   :nth-child(2) {
     border-top: 2px solid rgba(0,0,0,0.4);
@@ -30,6 +36,12 @@ const InfoBox = styled.div`
     margin: 20px 0;
     padding: 20px 0;
   }
+
+  @media (max-width: 700px) {
+    font-size: 20px;
+    width: 80%;
+  }
+
 `;
 
 const AdditionalInfo = ({data}) => {
@@ -42,8 +54,8 @@ const AdditionalInfo = ({data}) => {
           <InfoBox>UV Index: {data.uv}</InfoBox>
         </Left>
         <Right>
-          <InfoBox>Wind speed: {data.wind_kph} km/h</InfoBox>
           <InfoBox>Wind direction: {data.wind_dir}</InfoBox>
+          <InfoBox>Wind speed: {data.wind_kph} km/h</InfoBox>
           <InfoBox>Pressure: {data.pressure_mb} mmHg</InfoBox>
         </Right>
       </Wrapper>

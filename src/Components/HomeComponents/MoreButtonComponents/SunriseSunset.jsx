@@ -1,5 +1,17 @@
 import styled from "styled-components";
 
+const Wrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+
+  @media (max-width: 700px) {
+    display: none;
+  }
+`;
+
 const Container = styled.div`
   background-image: url("https://i.ibb.co/LYdDpcR/pexels-neale-lasalle-631477-1.jpg");
   //https://i.ibb.co/YpsFxSJ/pexels-jahoo-clouseau-388415-2.jpg day
@@ -49,16 +61,49 @@ const Sun = styled.div`
   left: 50%;
   top: -20px;
 `;
+const AstroTimesContainer = styled.div`
+  width: 90%;
+  min-height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 30px;
+`;
+const SunriseTime = styled.div``;
+const SunsetTime = styled.div``;
 
-const SunriseSunset = () => {
+const SunriseSunset = ({ data, day }) => {
+
+  const ymd = day.time.substring(0,10).split('-');
+  const SRhms = [data.sunrise.substring(0,2), data.sunrise.substring(3,5), data.sunrise.substring(6,8)];
+  const SShms = [data.sunset.substring(0,2), data.sunrise.substring(3,5), data.sunrise.substring(6,8)];
+
+  if (SRhms[2]==="PM") SRhms[0]=SRhms[0]+12;
+  if (SShms[2]==="PM") SShms[0]=SShms[0]+12;
+
+  const SR = new Date(Date.UTC(ymd[0],ymd[1],ymd[2],SRhms[0],SRhms[1]));
+  const SS = new Date(Date.UTC(ymd[0],ymd[1],ymd[2],SShms[0],SShms[1]));
+  
+  const sunriseTime = (SR.getTime()/1000);
+  const sunsetTime = (SS.getTime()/1000);
+
+  const dayLength = sunriseTime - sunsetTime;
+  const now = Math.round((new Date()).getTime() / 1000);
+
   return (
-    <Container>
-      <SunCircleWrapper>
-        <Circle>
-          <Sun />
-        </Circle>
-      </SunCircleWrapper>
-    </Container>
+    <Wrapper>
+      <Container>
+        <SunCircleWrapper>
+          <Circle>
+            <Sun />
+          </Circle>
+        </SunCircleWrapper>
+      </Container>
+        <AstroTimesContainer>
+          <SunriseTime>Sunrise: {data.sunrise}</SunriseTime>
+          <SunsetTime>Sunset: {data.sunset}</SunsetTime>
+        </AstroTimesContainer>
+    </Wrapper>
   );
 };
 

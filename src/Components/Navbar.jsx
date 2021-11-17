@@ -20,16 +20,27 @@ const Wrapper = styled.div`
 const Logo = styled.div`
   height: 50px;
 
+  display: flex;
+  align-items: center;
+
   span {
     font-size: 50px;
     font-weight: 300;
     color: #1eff00;
+
+    @media (max-width: 600px) {
+      font-size: 30px;
+    }
   }
-`;
+  `;
 const SearchContainer = styled.div`
   max-width: 30%;
   width: 100%;
   position: relative;
+  
+  @media (max-width: 600px) {
+    max-width: 60%;
+  }
 `;
 const SearchInput = styled.div`
   display: flex;
@@ -82,14 +93,20 @@ const AutoComBox = styled.div`
   }
 `;
 
-const Navbar = ({ searchResult, setSearch, search, setRequestName , setLoading, currentLocation }) => {
-
+const Navbar = ({
+  searchResult,
+  setSearch,
+  search,
+  setRequestName,
+  setLoading,
+  currentLocation,
+}) => {
   const [inputSuggActive, setInputSuggActive] = useState(false);
 
   const keyPressHandler = (e) => {
     const code = e.keyCode || e.which;
 
-    if (code !== 13 || e.repeat) return;
+    if (code !== 13) return;
 
     if (!search) return setRequestName(currentLocation);
 
@@ -98,13 +115,24 @@ const Navbar = ({ searchResult, setSearch, search, setRequestName , setLoading, 
     setRequestName(search);
   };
 
+  const clickHandler = (e) => {
+    const div = document.getElementById("autoComBox");
+    const top = div?.getBoundingClientRect().top;
+    const bottom = div?.getBoundingClientRect().bottom;
+    const left = div?.getBoundingClientRect().left;
+    const right = div?.getBoundingClientRect().right;
+
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    if (inputSuggActive && mouseX<left || mouseX>right && mouseY<top || mouseY>bottom) {
+      setInputSuggActive(false);
+    }
+
+  };
 
   window.addEventListener("keypress", (e) => keyPressHandler(e));
-  window.addEventListener('click', (e) => {
-    if (!inputSuggActive && !e.target.id !=="searchBlock") return;
-    setInputSuggActive(false)
-  });
-
+  window.addEventListener("click", (e) => clickHandler(e));
 
   return (
     <Container>
@@ -112,7 +140,10 @@ const Navbar = ({ searchResult, setSearch, search, setRequestName , setLoading, 
         <Logo>
           <span>Weather</span>
         </Logo>
-        <SearchContainer id='searchBlock' onClick={() => setInputSuggActive(true)}>
+        <SearchContainer
+          id="searchBlock"
+          onClick={() => setInputSuggActive(true)}
+        >
           <SearchInput>
             <Input
               type="text"
@@ -125,7 +156,7 @@ const Navbar = ({ searchResult, setSearch, search, setRequestName , setLoading, 
             </Icon>
           </SearchInput>
           {searchResult && inputSuggActive && (
-            <AutoComBox search={search}>
+            <AutoComBox id="autoComBox" search={search}>
               {searchResult.map((sugg) => (
                 <li key={sugg.id} onClick={() => setSearch(sugg.name)}>
                   {sugg.name}

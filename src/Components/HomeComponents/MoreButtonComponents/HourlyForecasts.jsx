@@ -53,15 +53,28 @@ const Item = styled.div`
 const Hour = styled.div`
   font-size: 25px;
   margin-bottom: 20px;
-`;
+
+  @media (max-width: 700px) {
+    font-size: 20px;
+  }
+  `;
 const Temp = styled.div`
   font-size: 30px;
-`;
+  @media (max-width: 700px) {
+    font-size: 24px;
+  }
+  `;
 const Icon = styled.div`
   font-size: 40px;
-`;
+  @media (max-width: 700px) {
+    font-size: 30px;
+  }
+  `;
 const Wind = styled.div`
   font-size: 25px;
+  @media (max-width: 700px) {
+    font-size: 20px;
+  }
 `;
 
 const HourlyForecasts = ({ data }) => {
@@ -69,14 +82,17 @@ const HourlyForecasts = ({ data }) => {
   const [position, setPosition] = useState(0);
 
   const positionHandler = (buttonSide) => {
-    const divWidth = parseInt((document.getElementById("thisElement").scrollWidth / 10))*10;
-    const divViewportWidth = parseInt((document.getElementById("thisElement").offsetWidth / 10))*10;;
-    if (buttonSide==="left" && position>0) {
-      setPosition(position - divWidth* 0.05);
-    } else if (buttonSide==="right" && position<=(divWidth - divViewportWidth - 100)) {
-      setPosition(position + divWidth * 0.05);
+    const largeDivWidth = document.getElementById('largeDiv').scrollWidth;
+    const largeDivWidthTenDivided = parseInt(document.getElementById('largeDiv').scrollWidth / 10) * 10;
+    const screenVisibleAreaWidth = document.getElementById('visibleArea').offsetWidth;
+
+    if (buttonSide==="left" && position > 0) {
+      setPosition(position - (largeDivWidthTenDivided * 0.05));
+    } else if (buttonSide==="right" && position < (largeDivWidthTenDivided - screenVisibleAreaWidth)) {
+      setPosition(position + (largeDivWidthTenDivided * 0.05));
     }
   }
+
 
   return (
     <Container>
@@ -84,8 +100,8 @@ const HourlyForecasts = ({ data }) => {
         <Button>
           <ArrowIcon  onClick={() => positionHandler("left")}><FontAwesomeIcon icon={faCaretLeft} /></ArrowIcon>
         </Button>
-        <Items>
-          <ItemsWrapper id="thisElement" currentPosition={position}>
+        <Items id="visibleArea">
+          <ItemsWrapper id="largeDiv" currentPosition={position}>
             {
               data.map((item) => (
               <Item key={item.id}>
